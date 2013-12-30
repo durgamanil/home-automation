@@ -1,0 +1,1346 @@
+INDIVIDUAL CONTROL HOME
+AUTOMATION SYSTEM
+ABSTRACT
+This project involves the design and construction of an individual control home
+automation system using RS232, GSM technology and a microcontroller.
+Home automation is the automatic or semi-automatic control and monitoring of
+household appliances and residential house features like doors, gate and even the windows.
+This project is a demonstration of how to design and build a multi purpose remotely
+controlled system that can switch OFF and ON any electrical household appliance (including
+the security light), by dialling a phone already interfaced via RS232 to a microcontroller that
+controls a relay for the automatic switching on and off of the appliance and the phone will
+send a feedback short message service text indicating the new state of the appliance, whether
+switched ON or OFF.
+The results of this project show that a microcontroller is a very powerful device for
+building smart electronic devices that can automatically control electrical appliances, with
+little circuitry complexities and components.
+v
+TABLE OF CONTENTS
+PROJECT REPORT....................................................................................................................i
+CERTIFICATION.....................................................................................................................ii
+DEDICATION.........................................................................................................................iii
+ACKNOWLEDGEMENT........................................................................................................iv
+ABSTRACT..............................................................................................................................v
+TABLE OF CONTENTS..........................................................................................................vi
+TABLE OF FIGURES............................................................................................................viii
+LIST OF TABLES....................................................................................................................ix
+CHAPTER ONE........................................................................................................................1
+INTRODUCTION.....................................................................................................................1
+1.1 AUTOMATION ..........................................................................................................2
+1.1.1 Office automation...............................................................................................3
+1.1.2 Building automation...........................................................................................3
+1.1.3 Power automation...............................................................................................4
+1.1.4 Home automation................................................................................................4
+1.2 PROJECT AIM...........................................................................................................4
+1.3 PROJECT OBJECTIVE.............................................................................................5
+1.4 PROJECT SCOPE AND LIMITATION.....................................................................5
+1.5 PROJECT JUSTIFICATION......................................................................................5
+1.6 REPORT LAYOUT.....................................................................................................6
+CHAPTER TWO.......................................................................................................................7
+LITERATURE REVIEW...........................................................................................................7
+2.1 HISTORY OF HOME AUTOMATION.....................................................................7
+2.2 HOME AUTOMATION SYSTEMS..........................................................................7
+2.3 HOME AUTOMATION STANDARDS....................................................................9
+2.3.1 INSTEON standard...........................................................................................10
+2.3.2 European Home Systems (EHS) protocol........................................................11
+2.3.3 ZigBee standard................................................................................................12
+2.3.4 KNX .................................................................................................................13
+2.3.5 Z-Wave standard...............................................................................................15
+2.3.6 X10 standard.....................................................................................................18
+2.3.7 LonWorks .........................................................................................................20
+2.3.8 ONE-NET standard...........................................................................................20
+2.3.9 Universal Powerline Bus...................................................................................22
+2.4 HOME AUTOMATION IMPLEMENTATION PLATFORMS.................................24
+2.4.1 Powerline communication..................................................................................24
+2.4.2 RS232.................................................................................................................25
+2.4.3 Ethernet...............................................................................................................29
+2.4.4 Bluetooth.............................................................................................................30
+2.4.5 Infrared...............................................................................................................31
+2.4.6 GSM....................................................................................................................31
+2.4.7 Microcontroller...................................................................................................32
+2.3.7.1 Von-Neumann architecture.........................................................................33
+2.3.7.2 Harvard architecture...................................................................................33
+vi
+CHAPTER THREE..................................................................................................................35
+METHODOLOGY ..................................................................................................................35
+3.1 PRELIMINARY CONSIDERATIONS......................................................................35
+3.1.1 Selection of implementation platform................................................................35
+3.1.2 Selection of hardware components.....................................................................36
+3.2 SYSTEM DESIGN......................................................................................................36
+3.2.1 PIC18F4455.........................................................................................................37
+3.2.1.1 Central Processing Unit (CPU)..................................................................38
+3.2.1.2 Random Access Memory (RAM)..............................................................39
+3.2.1.3 Read Only Memory (ROM).......................................................................39
+3.2.1.4 Input and Output ports (I/O)......................................................................39
+3.2.2 PIC18F4455 architecture...................................................................................40
+3.2.3 PIC18F4455 programming................................................................................43
+3.2.4 Nokia 6021.........................................................................................................44
+3.2.5 HIN232..............................................................................................................45
+3.2.6 Relay..................................................................................................................47
+CHAPTER FOUR....................................................................................................................49
+DESIGN AND IMPLEMENTATION......................................................................................49
+4.1 BUILDING THE POWER SUPPLY AND INTERFACING THE RELAY.............50
+4.2 SERIAL COMMUNICATION BETWEEN THE MICROCONTROLLER AND
+NOKIA 6021............................................................................................................51
+4.3 PROGRAMMING THE MICROCONTROLLER...................................................52
+4.4 TESTING THE COMPLETE DESIGN AND CASING...........................................53
+CHAPTER FIVE......................................................................................................................57
+CONCLUSION AND RECOMMENDATION........................................................................57
+5.1 CONCLUSION..........................................................................................................57
+5.2 RECOMMENDATION..............................................................................................57
+REFERENCES........................................................................................................................59
+APPENDIX I: Bill of components...........................................................................................61
+APPENDIX II: The PIC C code for programming the PIC4455 in CCS C compiler..............62
+vii
+TABLE OF FIGURES
+Figure 2.1: Straight cable connection between RS232 DB9 DTE and RS232 DB9 DCE.......26
+Figure 2.2: Straight cable connection between RS232 DB25 DTE and RS232 DB25 DCE...26
+Figure 2.3: Straight cable connection between RS232 DB9 DTE and RS232 DB25 DCE.....27
+Figure 2.4: Crossover cable connection between DB9 DTE and DB9 DCE...........................27
+Figure 2.5: Crossover cable connection between DB25 DCE and DB25 DCE.......................28
+Figure 2.6: Crossover cable connection between DB9 DCE and DB9 DCE...........................28
+Figure 3.1: Block diagram of the home automation system....................................................37
+Figure 3.2: Interactions between the main microcontroller parts............................................38
+Figure 3.3: 40-Pin PIC18F4455 microcontroller.....................................................................40
+Figure 3.4: PIC18F4455 block diagram...................................................................................42
+Figure 3.5: CCS C compiler IDE interface..............................................................................43
+Figure 3.6: MikroElectronika programmer interface...............................................................44
+Figure 3.7: Nokia 6021 mobile phone......................................................................................45
+Figure 3.8: HIN232 pinout.......................................................................................................46
+Figure 4.1: Flow chart of the design........................................................................................49
+Figure 4.2: The power supply...................................................................................................50
+Figure 4.3: The RS232 to microcontroller portion of the design.............................................52
+Figure 4.4: The complete home automation system circuit (controlling lighting fixture).......55
+Figure 4.5: The individual control home automation system..................................................56
+viii
+LIST OF TABLES
+Table 2.1: List of X10 four bit commands...............................................................................19
+Table 3.1: HIN232 pin descriptions.........................................................................................46
+ix
+CHAPTER ONE
+INTRODUCTION
+Imagine how helpful it will be to be able to switch on your air conditioning
+system ten minutes before you get home on a hot afternoon in January. How about
+having a security system that will detect smoke, excessive electrical power usage,
+burglar attempts and unauthorized movements in your house and alert you? This is
+what home automation is about and there is no end to its application. In fact,
+sophisticated home automation systems are now being developed that can maintain an
+inventory of household items, record their usage through an RFID (Radio Frequency
+Identification) tag, and prepare a shopping list or automatically order replacements.
+Home automation has made it possible to have what is often referred to as a
+'smart home', a home that can detect and identify you, automatically adjust the
+lighting to your predefined taste, open doors automatically, play your favourite music,
+water your flowers in the morning, switch on the security lights at night and switch
+them off in the morning, heat water for bathe and tea, stream to you anywhere in the
+world via the internet a live video of what is happening in and around your house. It
+makes it possible to link lighting, entertainment, security, telecommunications,
+heating, and air conditioning into one centrally controlled system. This allows you to
+make your house an active partner in managing your busy life.
+Nowadays, you can hardly find a house without a home automation system
+which can range from the remote for the television, burglar alarm and hi-tech security
+gates, to an automated air conditioning system that maintains the temperature at a
+predefined value.
+1
+1.1 AUTOMATION
+Automation is the use of control systems and information technology to
+control equipment, industrial machinery and processes, reducing the need for human
+intervention. In the scope of industrialization, automation is a step beyond
+mechanization. Mechanization provided human operators with machinery to assist
+them with the physical requirements of work while automation greatly reduces the
+need for human sensory and mental requirements as well (Wikipedia, 2009).
+Automation plays an increasingly important role in the global economy
+and in daily experience. Engineers strive to combine automated devices with
+mathematical and organizational tools to create complex systems for a rapidly
+expanding range of applications and human activities. Many roles for humans in
+industrial processes presently lie beyond the scope of automation. Human-level
+pattern recognition, language recognition, and language production ability are well
+beyond the capabilities of modern mechanical and computer systems. Tasks requiring
+subjective assessment or synthesis of complex sensory data, such as scents and
+sounds, as well as high-level tasks such as strategic planning, currently require human
+expertise.
+Automation has had a notable impact in a wide range of highly visible
+industries beyond manufacturing. Once ubiquitous telephone operators have been
+replaced largely by automated telephone switchboards and answering machines.
+Medical processes such as primary screening in electrocardiograph or radiography
+and laboratory analysis of human genes, blood plasmas, cells, and tissues are carried
+out at much greater speed and accuracy by automated systems. Automated teller
+2
+machines have reduced the need for bank visits to obtain cash and carry out
+transactions. In general, automation has been responsible for the shift in the world
+economy from agrarian to industrial in the 19th century and from industrial to services
+in the 20th century.
+1.1.1 Office automation
+Office automation refers to the varied computer machinery and software
+used to digitally create, collect, store, manipulate, and relay office information needed
+for accomplishing basic tasks and goals. Raw data storage, electronic transfer, and the
+management of electronic business information comprise the basic activities of an
+office automation system, office automation helps in optimizing or automating
+existing office procedures.
+1.1.2 Building automation
+Building automation describes the functionality provided by the control of
+a building. The control system is a computerized, intelligent network of electronic
+devices, designed to monitor and control the mechanical and lighting systems of a
+building. A building automation system is an example of a distributed control system.
+The building automation system (BAS) core functionality keeps the building climate
+within a specific range, provides lighting based on an occupancy schedule, and
+monitors system performance and device failures and provides email and/or text
+notifications to building engineering staff. The BAS functionality reduces building
+energy and maintenance costs when compared to a non-controlled building.
+3
+1.1.3 Power automation
+Power automation is the automated control and monitoring of power
+plants, substations and transformers for effectiveness, efficiency and fault detection. It
+has made it possible to have a reliable municipal or national electricity system, which
+often comprises remote and hard-to-reach transformers and power sub-system units. It
+makes it possible to monitor different power units, relay their status and health
+information, and even carry out fault detection and correction without human
+interference.
+Example of power automation system is the Supervisory Control and Data
+Acquisition (SCADA) system.
+1.1.4 Home automation
+Home automation may designate an emerging practice of increased
+automation of household appliances and features in residential dwellings, particularly
+through electronic means that allow for things impracticable, overly expensive or
+simply not possible in recent decades. Home automation includes all that a building
+automation provides like climate controls, door and window controls, and in addition
+control of multimedia home theatres, pet feeding, plant watering and so on. But there
+exists a difference in that home automation emphasizes more on comforts through
+ergonomics and ease of operation.
+1.2 PROJECT AIM
+The aim of this project is to design and construct a home automation
+4
+system that will remotely switch on or off any household appliance connected to it,
+using a microcontroller, voice dial on phone, and short message service for feedback.
+1.3 PROJECT OBJECTIVE
+The objective of this project is to implement a low cost, reliable and
+scalable home automation system that can be used to remotely switch on or off any
+household appliance, using a microcontroller to achieve hardware simplicity, low cost
+short message service (SMS) for feedback and voice dial from any phone to toggle
+the switch state.
+1.4 PROJECT SCOPE AND LIMITATION
+This project work is complete on its own in remotely and automatically
+switching on and off of any electrical appliance not limited to household appliances,
+and sends a feedback message indicating the new present state of the appliance. It
+does not implement control of multiple appliances or automatic detection of faults in
+the controlled appliance.
+1.5 PROJECT JUSTIFICATION
+This project is of contributory knowledge to the development and
+implementation of home automation systems in Nigeria using low cost, locally
+available components like microcontroller, free voice dial service (popularly referred
+to as 'flashing') and very cheap short message service (SMS) text.
+5
+1.6 REPORT LAYOUT
+The entire project is composed of five chapters, each covering a section of
+the work as summarized below:
+• Chapter one gives an introduction to automation as a whole and the
+different types of automation.
+• Chapter two covers an extensive literature review of previous works on
+home automation systems, the different established standards and
+protocols, and the platforms over which home automation can be
+implemented.
+• Chapter three highlights the project methodology, giving reasons for choice
+of specific platforms and components, and also, comprehensive details on
+both hardware components and communication services used.
+• Chapter four is on the project design and implementation with clear
+practical details of the project design, construction, testing, microcontroller
+coding and debugging. Special emphasis is also made on the flexibility and
+scalability of the project work with real life illustration.
+• Chapter five is on the conclusion and recommendations based on the
+project work with emphasis on the reliability, maintainability and
+flexibility of the design. Also, recommendations based on the challenges
+encountered and further possible development of the project work are
+enumerated.
+6
+CHAPTER TWO
+LITERATURE REVIEW
+2.1 HISTORY OF HOME AUTOMATION
+Home automation has been around since the world war 1 (1914), in fact,
+the television remote (a simple home automation system) was patented in 1893
+(Wikipedia, 2009). Since then different home automation systems have evolved with a
+sharp rise after the second World War. It's growth has been through various informal
+research and designs by technology enthusiasts who want a better way of getting
+things done at home without much effort on their part. The systems evolved from one
+that can automatically do routine chores like switch on and off security lights, to more
+sophisticated ones that can adjust lighting, put the television channel to favourite
+station and control doors.
+2.2 HOME AUTOMATION SYSTEMS
+Home automation systems may designate electronic systems in homes and
+residential buildings that make possible the automation of household appliances. The
+new stream of home automation systems has developed into a vast one and the current
+market is flooded with a flurry of home automation systems and device
+manufacturers.
+The types of home automation systems based on their control systems are:
+1. Individual Control Systems
+7
+These types were the first to hit the market in the early years, here each
+device like the heater or the air conditioner will have an independent control
+dedicated to it.
+2. Distributed Control Systems
+The main feature of these type of systems is emergency shut-down. With
+this system you can preset or change the control parameters of several
+similar devices, for example, the thermostat of several air conditioners and
+their ON/OFF timings.
+3. Central Control Systems
+These are computerized systems programmed to handle all functions of
+multiple utilities like air conditioning system, home entertainments, doors,
+windows, refrigerators and cooking systems, all at the same time regardless
+of whether you are at home or away. You can connect to the control system
+through telephone or internet from anywhere in the world.
+The types of home automation systems based on the carrier mode are:
+1. Powerline carrier Systems
+The least expensive type of home automation system operates over the
+home's existing wiring, or powerline carrier. These can range from X10-
+based lamp timers, to more sophisticated systems that require installation by
+a trained professional.
+8
+2. Wireless systems
+Also available are wireless home automation systems that utilize radiofrequency
+technology. They are often used to operate lights, sometimes in
+conjunction with a hardwired lighting control system.
+3. Hardwired systems
+Wired, or “hardwired” home control systems are the most reliable and
+expensive. These systems can operate over high-grade communications
+cable such as Category 5 or 5e, or their own proprietary “bus” cable. That is
+why it is best to plan for them when a house is being constructed. Hardwired
+systems can perform more tasks at a time and do them quickly and reliably,
+making them ideal for larger homes. They can also integrate more systems
+in the home, effectively tying together indoor and outdoor lighting, audio
+and video equipment, security system, even the heating and cooling system
+into one control package that will be easy and intuitive to operate.
+4. Internet Protocol control system
+Internet Protocol (IP) control automation system uses the internet, gives
+each device under its control an Internet Protocol address, and creates a
+local area network (LAN) in the home. Hence, the home can be interacted
+with over the internet with possibility of live video streaming and real-time
+control.
+2.3 HOME AUTOMATION STANDARDS
+9
+There are many established industry standards for home automation
+systems and are implemented over the various carrier modes ranging from powerline
+to wireless. The popular and major standards are INSTEON, European Home
+Systems (EHS), ZigBee, KNX, Z-Wave, X10, LonWorks, ONE-NET and Univerasl
+Powerline Bus (UPB).
+2.3.1 INSTEON standard
+INSTEON standard is a dual-band mesh topology employing ac-power
+lines and a radio frequency (RF) protocol to communicate with and automate home
+electronic devices and appliances, which normally work independently. It is a home
+automation networking technology invented by SmartLabs Inc. INSTEON was
+developed, based on the X10 model, for control and sensing applications in the home
+(Wikipedia, 2009).
+INSTEON is designed to enable simple devices to be networked together
+using the powerline and/or radio frequency (RF). All INSTEON devices are peers,
+meaning each device can transmit, receive, and repeat any message of the INSTEON
+protocol, without requiring a master controller or complex routing software.
+INSTEON is not only an effective system for connecting lighting switches and loads
+without extra wiring, but it also forms the basis for a more sophisticated home
+automation network.
+The following are the possible applications of INSTEON:
+• Scene and remote control lighting,
+10
+• Security alarm interfaces and sensors,
+• Home sensors (e.g. water, humidity, temperature),
+• Access control (e.g. door locks),
+• Heating, ventilating and air cooling (HVAC) control,
+• Audio-video control, and
+• Appliance management.
+2.3.2 European Home Systems (EHS) protocol
+The European home systems (EHS) protocol was aimed at home
+appliances control and communication using power line communication (PLC).
+Developed by EHSA (European Home Systems Association) it was merged with two
+other protocols to form the KNX protocol, which complies with CENELEC norm EN
+50090 standard and had a chance to be a basis for the first open standard for home
+and building control (Wikipedia, 2009).
+The areas of application of EHS are:
+• Heating, ventilating and air cooling (HVAC) control,
+• Scene and remote control lighting, and
+• Appliance management.
+11
+2.3.3 ZigBee standard
+ZigBee is a specification for a suite of high level communication protocols
+using small, low-power digital radios based on the IEEE 802.15.4-2003 standard for
+wireless personal area networks (WPANs), such as wireless headphones connecting
+with cell phones via short-range radio. The technology defined by the ZigBee
+specification is intended to be simpler and less expensive than other WPANs such as
+Bluetooth. ZigBee is targeted at radio frequency (RF) applications that require a low
+data rate, long battery life, and secure networking (Wikipedia, 2009).
+ZigBee is a low-cost, low-power, wireless mesh networking standard. The
+low cost allows the technology to be widely deployed in wireless control and
+monitoring applications, the low power-usage allows longer life with smaller
+batteries, and the mesh networking provides high reliability and larger range.
+ZigBee operates in the industrial, scientific and medical (ISM) radio
+bands; 868 MHz in Europe, 915 MHz in the USA and Australia, and 2.4 GHz in most
+jurisdictions worldwide. ZigBee chip vendors typically sell integrated radios and
+microcontrollers with between 60K and 128K flash memory, such as the Freescale
+MC13213, the Ember EM250 and the Texas Instruments CC2430. Radios are also
+available as stand-alone to be used with any processor or microcontroller. Generally,
+the chip vendors also offer the ZigBee software stack, although independent ones are
+also available. The ZigBee Alliance is a group of companies that maintain and publish
+the ZigBee standard.
+Typical areas of application of ZigBee are:
+12
+• Home Entertainment and Control — Smart lighting, advanced
+temperature control, safety and security, movies and music,
+• Home Awareness — Water sensors, power sensors, smoke and fire
+detectors, smart appliances and access sensors,
+• Mobile Services — m-payment, m-monitoring and control, msecurity
+and access control, m-healthcare and tele-assist,
+• Commercial Building — Energy monitoring, HVAC, lighting,
+access control, and
+• Industrial Plant — Process control, asset management,
+environmental management, energy management, industrial device
+control.
+2.3.4 KNX
+KNX is a standardised (EN 50090,ISO/IEC 14543), OSI-based network
+communications protocol for intelligent buildings. KNX is the successor to, and
+convergence of, three previous standards: the European Home Systems Protocol
+(EHS), BatiBUS, and the European Installation Bus (EIB). The KNX standard is
+administered by the Konnex Association (Wikipedia, 2009).
+This standard is based on the communication stack of EIB but enlarged
+with the physical layers, configuration modes and application experience of BatiBUS
+and EHS.
+13
+KNX defines several physical communication media:
+• Twisted pair wiring
+• Powerline networking
+• Radio
+• Infrared
+• Ethernet (also known as EIBnet/IP or KNXnet/IP)
+KNX is designed to be independent of any particular hardware platform. A
+KNX Device Network can be controlled by anything from an 8-bit microcontroller to
+a PC, according to the needs of a particular implementation. The most common form
+of installation is over twisted pair medium.
+KNX is approved as an open standard to International standard (ISO/IEC
+14543-3) European Standard (CENELEC EN 50090 and CEN EN 13321-1) and
+China Guo Biao(GB/Z 20965).
+KNX has more than 100 members/manufacturers including ABB, Bosch,
+Miele & Cie KG, ON Semiconductor, Schneider Electric Industries S.A., Siemens,
+Uponor Corporation and Jung.
+There are three categories of KNX device:
+1. A-mode or "Automatic mode" devices automatically configure
+themselves, and are intended to be sold to and installed by the end user.
+14
+2. E-mode or "Easy mode" devices require basic training to install. Their
+behaviour is pre-programmed, but has configuration parameters that need
+to be tailored to the user's requirements.
+3. S-mode or "System mode" devices are used in the creation of bespoke
+building automation systems. S-mode devices have no default behaviour,
+and must be programmed and installed by specialist technicians.
+2.3.5 Z-Wave standard
+The Z-wave is a wireless communications proprietary standard designed
+for home automation, specifically to remote control applications in residential and
+light commercial environments. This technology, which is developed by Sigma
+designs' Zensys, uses a low power RF radio embedded or retrofitted into home
+electronics devices and systems, such as lighting, home access control, entertainment
+systems and household appliances. The technology has been standardized by the ZWave
+Alliance, an international consortium of manufacturers that oversees
+interoperability between Z-Wave products and enabled devices (Wikipedia, 2009).
+Z-Wave is a mesh networking technology where each node or device on
+the network is capable of sending and receiving control commands through walls or
+floors and around household obstacles or radio dead spots that might occur in the
+home. Z-Wave devices can work singly or in groups, and can be programmed into
+scenes or events that trigger multiple devices, either automatically or via remote
+control.
+Z-Wave is a low-power wireless technology designed specifically for
+15
+remote control applications. Unlike Wi-Fi and other IEEE 802.11-based wireless
+LAN systems that are designed primarily for high-bandwidth data flow, the Z-Wave
+RF system operates in the sub Gigahertz frequency range and is optimized for lowoverhead
+commands such as on-off (as in a light switch or an appliance) and raiselower
+(as in a thermostat or volume control), with the ability to include device
+metadata in the communications. Because Z-Wave operates apart from the 2.4 GHz
+frequency of 802.11 based wireless systems, it is largely impervious to interference
+from common household wireless electronics, such as Wi-Fi routers, cordless
+telephones and Bluetooth devices that work in the same frequency range. This
+freedom from household interference allows for a standardized low-bandwidth
+control medium that can be reliable alongside common wireless devices. On other
+hand, 2.4 GHz frequency usage allows unlicensed devices usage in most countries;
+this is convenient to customers and allows wider technology adoption and reduced
+deployment costs. This could be not true for other frequencies and could easily turn
+into a strong drawback if licensing is required or frequency is occupied. That's one of
+reason why competing 2.4 GHz technologies became so popular.
+As a result of its low power consumption and low cost of manufacture, ZWave
+is easily embedded in consumer electronics products, including battery
+operated devices such as remote controls, smoke alarms and security sensors. Z-Wave
+is currently supported by over 200 manufacturers worldwide and appears in a broad
+range of consumer products in the U.S. and Europe.
+Some common applications for Z-Wave include:
+• Remote Home Control And Management – By adding Z-Wave to
+16
+home electronics such as lighting, climate and security systems, it is
+possible to control and monitor these household functions via remote
+control, based on manual or automated decisions. The control can be
+applied to a single device or group of devices, in a single room or zone or
+throughout the entire home. One of the benefits of Z-Wave over power
+line communication technologies is the ability to function in older houses
+lacking a neutral wire. Z-Wave devices can also be monitored and
+controlled from outside of the home by way of a gateway that combines
+Z-Wave with broadband Internet access.
+• Energy Conservation – Z-Wave is envisioned as a key enabling
+technology for energy management in the green home. As an example, ZWave-
+enabled thermostats are able to raise or lower automatically, based
+on commands from Z-Wave enabled daylight sensors. Grouped scene
+controls can ensure that unnecessary energy consumption is minimized by
+various all-off states for systems throughout the home, such as lighting,
+appliances and home entertainment systems.
+• Home Safety And Security Systems – Because Z-Wave can
+transceive commands based on real time conditions, and is able to control
+devices in intelligent groupings, it allows novel extensions of traditional
+home security concepts. As an example, the opening of a Z-Wave enabled
+door lock can de-activate a security system and turn on lights when
+children arrive home from school, and send a notification to a parent's PC
+or cell phone via the Internet. Opening a Z-Wave enabled garage door can
+17
+trigger exterior and interior home lights, while a Z-Wave motion detector
+can trigger an outdoor security light and a webcam, which would allow
+the end user to monitor the home while away.
+• Home Entertainment – Z-Wave's ability to command multiple
+devices as a unified event makes it well suited for home audio and video
+applications. For example, a simple "Play DVD" command on the remote
+control could turn on the needed components, set them to the correct
+inputs and even lower motorized shades and dim the room lights. ZWave's
+RF technology is also well suited as an evolution of conventional
+Infrared (IR) based remote controls for home electronics, as it is not
+constrained by IR's line of sight and distance limitations. In January of
+2008, Zensys announced a single-chip solution that pairs Z-Wave with IR
+control, positioning the technology as an all encompassing solution for
+home remote controls.
+2.3.6 X10 standard
+X10 is an international and open industry standard for communication
+among electronic devices used for home automation. It primarily uses power line
+wiring for signalling and control, where the signals involve brief radio frequency
+bursts representing digital information. X10 was developed in 1975 by Pico
+Electronics of Glenrothes, Scotland, in order to allow remote control of home devices
+and appliances. It was the first general purpose home automation network technology
+and remains the most widely available. Although a number of higher bandwidth
+alternatives exist including KNX, INSTEON, BACnet, and LonWorks, X10 remains
+18
+popular in the home environment with millions of units in use worldwide, and
+inexpensive availability of new components (Wikipedia, 2009).
+Packets transmitted using X10 control protocol consist of a four bit house
+code followed by one or more four bit unit code, finally followed by a four bit
+command.
+Table 2.1 : List of X10 four bit commands
+Code Function Description
+0 0 0 0 All Units Off
+Switch off all devices with the house code indicated in the
+message
+0 0 0 1 All Lights On
+Switches on all lighting devices (with the ability to control
+brightness)
+0 0 1 0 On Switches on a device
+0 0 1 1 Off Switches off a device
+0 1 0 0 Dim Reduces the light intensity
+0 1 0 1 Bright Increases the light intensity
+0 1 1 1 Extended Code Extension code
+1 0 0 0 Hail Request
+Requests a response from the device(s) with the house code
+indicated in the message
+1 0 0 1
+Hail
+Acknowledge
+Response to the previous command
+1 0 1 x Preset Dim Allows the selection of two predefined levels of light intensity
+1 1 0 1 Status is On
+Response to the Status Request indicating that the device is
+switched on
+1 1 1 0 Status is Off Response indicating that the device is switched off
+1 1 1 1 Status Request Request requiring the status of a device
+19
+2.3.7 LonWorks
+LonWorks is a networking platform specifically created to address the
+needs of control applications. The platform is built on a protocol created by Echelon
+Corporation for networking devices over media such as twisted pair, power lines,
+fibre optics, and radio frequency. It is used for the automation of various functions
+within buildings such as lighting and HVAC (Heating, ventilating and air
+conditioning).
+This technology has its origins with chip designs, power line and twisted
+pair, signalling technology, routers, network management software, and other
+products from Echelon Corporation. Two physical layer signalling technologies,
+twisted pair and power line carrier, are typically included in each of the standards
+created around the LonWorks technology. The two-wire layer operates at 78 kbit/s
+using differential manchester encoding, while the power line achieves either 5.4 or
+3.6 kbit/s, depending on frequency. Additionally, the LonWorks platform uses an
+affiliated Internet protocol (IP) tunnelling standard – ANSI/CEA-852 – in use by a
+number of manufacturers to connect the devices on previously deployed and new
+LonWorks-based networks to IP-aware applications or remote network management
+tools. Most LonWorks-based control applications are being implemented with some
+sort of IP integration, either at the user interface, application level or in the control
+infrastructure. This is accomplished with web services or IP-routing products
+available on the market (Wikipedia, 2009).
+2.3.8 ONE-NET standard
+20
+ONE-NET is an open-source standard for wireless network designed for
+low-cost, low-power (battery operated) control networks for applications such as
+home automation, security and monitoring, device control, and sensor networks.
+ONE-NET is not tied to any proprietary hardware or software, and can be
+implemented with a variety of low-cost off-the-shelf radio transceivers and
+microcontrollers from a number of different manufacturers (Wikipedia, 2009).
+ONE-NET uses UHF ISM radio transceivers and currently operates in the
+868 MHz and 915 MHz frequencies. The ONE-NET standard allows for
+implementation on other frequencies, and some work is being done to implement it in
+the 400 MHz and 2.4 GHz frequency ranges. It utilizes Wideband FSK (Frequencyshift
+keying) to encode data for transmission and it features a dynamic data rate
+protocol with a base data rate of 38.4 kbit/s. The specification allows per-node
+dynamic data rate configuration for data rates up to 230 kbit/s.
+ONE-NET supports star, peer-to-peer, and mesh networking topologies.
+Star network topology can be used for lower complexity and cost of peripherals, and
+also simplifies encryption key management. In peer-to-peer mode, a master device
+configures and authorizes peer-to-peer transactions. The wireless mesh network mode
+allows for repeating to cover larger areas or route around dead areas. Outdoor peer-topeer
+range has been measured to over 500 m, indoor peer-to-peer range has been
+demonstrated from 60 m to over 100 m, and mesh mode can extend operational range
+to several kilometers. Simple, block, and streaming transactions are supported.
+Simple transactions typically use message types as defined by the ONE-NET protocol
+to exchange sensor data such as temperature or energy consumption, and control data
+21
+such as on/off messages. Simple transactions use encryption techniques to avoid
+susceptibility to replay attacks. Block transactions can be used to transmit larger
+blocks of data than simple messages. Block transactions consist of multiple packets
+containing up to 58 bytes per packet. Blocks transactions can transfer up to 65,535
+bytes per block. Streaming transactions are similar in format to block transactions but
+do not require retransmission of lost data packets.
+ONE-NET is optimized for low power consumption such as batterypowered
+peripherals. Low-duty-cycle battery-powered ONE-NET devices such as
+window sensors, moisture detectors, etc. can achieve a three to five year battery life
+with “AA” or "AAA" alkaline cells. Dynamic power adjustment allows signal
+strength info to be used to scale back transmit power to conserve battery power. High
+data rates and short packet sizes minimize transceiver on time. Further power
+efficiency can be gained utilizing deterministic sleep periods for client devices.
+2.3.9 Universal Powerline Bus
+The Universal Powerline Bus (UPB) is an industry emerging standard for
+communication among devices used for home automation. It uses powerline wiring
+for signalling and control.
+Household electrical wiring is used to send digital data between UPB
+devices. While in the X10 protocol this digital data is encoded onto a 120 KHz carrier
+which is transmitted as bursts during the relatively quiet zero crossings of the 50 or 60
+Hz AC alternating current waveform, the UPB protocol works differently. The UPB
+communication method consists of a series of precisely timed electrical pulses (called
+22
+UPB Pulses) that are superimposed on top of the normal AC power waveform (sine
+wave). Receiving UPB devices can easily detect and analyse these UPB Pulses and
+pull out the encoded digital information from them. UPB Pulses are generated by
+charging a capacitor to a high voltage and then discharging that capacitor’s voltage
+into the powerline at a precise time. This quick discharging of the capacitor creates a
+large “spike” (or pulse) on the powerline that is easily detectable by receiving UPB
+devices wired large distances away on the same powerline.
+UPB controllers range from extremely simple plug-in modules to very
+sophisticated whole house home automation controllers. The simplest controllers are
+plug-in controllers that are recommended for a moderate amount of switches and
+devices as it becomes cumbersome to control a wide range of devices. More
+sophisticated controllers can control more units and/or incorporate timers that
+perform pre-programmed functions at specific times each day. Units are also available
+that use passive infrared motion detectors or photocells to turn lights on and off based
+on external conditions. Finally, whole house home automation controllers can be fully
+programmed. These systems can execute many different timed events, respond to
+external sensors, and execute, with the press of a single button, an entire scene,
+turning lights on, establishing brightness levels, and so on.
+UPB was developed by PCS Powerline Systems of Northridge, California
+and released in 1999. Based on the concept of the ubiquitous X10 standard, UPB has
+an improved transmission rate and higher reliability. While X10 without specialised
+firewalls has a reported reliability of 70-80%, UPB reportedly has a reliability of
+more than 99% (Wikipedia, 2009).
+23
+2.4 HOME AUTOMATION IMPLEMENTATION PLATFORMS
+Home automation can be implemented over a number of platforms
+namely, Powerline, RS232 serial communication, Ethernet, Bluetooth, Infrared and
+GSM. Each platform having its own peculiarity and area of application.
+2.4.1 Powerline communication
+Powerline communication is a system for carrying data on a conductor
+also used for electrical power transmission. Though electrical power is transmitted
+over high voltage transmission lines, distributed over medium voltage and used inside
+buildings at lower voltages, powerline communication can be applied at each stage.
+All powerline communication systems operate by impressing a modulated
+carrier signal on the wiring system. Different types of powerline communications use
+different frequency bands, depending on the signal transmission characteristics of the
+power wiring used. Since the power wiring system was originally intended for
+transmission of alternating current (AC) power, in conventional use, the power wire
+circuits have only a limited ability to carry higher frequencies. The propagation
+problem is a limiting factor for each type of powerline communications. Data rates
+over a powerline communications system vary widely. Low-frequency (about 100 –
+200 Khz) carriers impressed on high-voltage transmission lines may carry one or two
+analog voice circuits, or telemetry and control circuits with an equivalent data rate of
+a few hundred bits per second; however, these circuits may be many miles long.
+24
+2.4.2 RS232
+The RS232 stands for recommended standard number 232. The serial ports
+on most computers use a subset of the RS232 standard. The full RS232 standard
+specifies a 25-pin "D" connector of which 22 pins are used. Most of these pins are not
+needed for normal PC communications, and indeed, most new PCs are equipped with
+male D type connectors having only 9 pins, trading off compatibility with the standard
+against the use of less costly and more compact connectors.
+In RS232, the communicating devices are referred to as Data Terminal
+Equipment (DTE) and Data Communication Equipment (DCE). The DTE is an end
+instrument that converts user information into signals or reconverts received signals
+and uses the male connector. The DTE is the functional unit of a data station that
+serves as a data source or a data sink and provides for the data communication control
+function to be performed in accordance with link protocol. While the DCE is
+communication link control device that provides the clock signal and uses the female
+connector. The DTE ends the communication line, whereas the DCE provides a path
+for communication. In connecting a DTE device to a DCE a straight pin-for-pin
+connection is used. However, to connect two DCEs or DTEs the transmit and receive
+lines must be crossed. The DTE is usually a computer or a terminal device and the
+DCE is usually a modem.
+Figures 2.1 – 2.3 shows the straight connections while figures 2.4 – 2.6
+illustrate the cross-over cable connections.
+25
+Figure 2.1 : Straight cable connection between RS232 DB9 DTE and RS232 DB9 DCE
+Figure 2.2 : Straight cable connection between RS232 DB25 DTE and RS232 DB25 DCE
+26
+Figure 2.3 : Straight cable connection between RS232 DB9 DTE and RS232 DB25 DCE
+Figure 2.4 : Crossover cable connection between DB9 DCE and DB9 DCE
+27
+Figure 2.5 : Crossover cable connection between DB25 DCE and DB25 DCE
+Figure 2.6 : Crossover cable connection between DB9 DCE and DB9 DCE
+28
+2.4.3 Ethernet
+Ethernet defines a number of wiring and signalling standards for the
+physical connection of two or more devices together. Ethernet was originally based on
+the idea of computers communicating over a shared coaxial cable acting as a
+broadcast transmission medium. The methods used show some similarities to radio
+systems, although there are fundamental differences, such as the fact that it is much
+easier to detect collisions in a cable broadcast system than a radio broadcast. The
+common cable providing the communication channel was likened to the ether and it
+was from this reference that the name "Ethernet" was derived (Wikipedia, 2009).
+From this early and comparatively simple concept, Ethernet evolved into the complex
+networking technology that today underlies most local area networks. The coaxial
+cable was replaced with point-to-point links connected by Ethernet hubs and/or
+switches to reduce installation costs, increase reliability, and enable point-to-point
+management and troubleshooting. StarLAN was the first step in the evolution of
+Ethernet from a coaxial cable bus to a hub-managed, twisted-pair network. The
+advent of twisted-pair wiring dramatically lowered installation costs relative to
+competing technologies, including the older Ethernet technologies. Through the
+physical connection, Ethernet stations communicate by sending each other data
+packets, blocks of data that are individually sent and delivered.
+Despite the significant changes in Ethernet from a thick coaxial cable bus
+running at 10 Mbits/s to point-to-point links running at 1 Gbit/s and above, all
+generations of Ethernet (excluding early experimental versions) share the same frame
+formats (and hence the same interface for higher layers), and can be readily
+29
+interconnected. And due to the ubiquity of Ethernet, the ever-decreasing cost of the
+hardware needed to support it, and the reduced panel space needed by twisted pair
+Ethernet, most manufacturers now build the functionality of an Ethernet card directly
+into computer and laptop motherboards, eliminating the need for installation of a
+separate network card.
+2.4.4 Bluetooth
+Bluetooth is an open wireless protocol for exchanging data over short
+distances from fixed and mobile devices, creating personal area networks (PANs). It
+was originally conceived as a wireless alternative to RS232 data cables. It can connect
+several devices, overcoming problems of synchronization. It is a standard and a
+communications protocol primarily designed for low power consumption, with a short
+range (power-class-dependent: 1 meter, 10 meters, 100 meters) based on low-cost
+transceiver microchips in each device. Bluetooth makes it possible for devices to
+communicate with each other when they are in range. Because the devices use a radio
+(broadcast) communications system, they do not have to be in line of sight of each
+other.
+Bluetooth uses a radio technology called frequency-hopping spread
+spectrum, which chops up the data being sent and transmits chunks of it on up to 79
+frequencies. In its basic mode, the modulation is Gaussian frequency-shift keying
+(GFSK). It can achieve a gross data rate of 1 Mb/s. Bluetooth provides a way to
+connect and exchange information between devices such as mobile phones,
+telephones, laptops, personal computers, printers, Global Positioning Systems (GPS)
+receivers, digital cameras, and video game consoles through a secure, globally
+30
+unlicensed Industrial, Scientific and Medical (ISM) 2.4 GHz short-range radio
+frequency band. The Bluetooth specifications are developed and licensed by the
+Bluetooth Special Interest Group (SIG). The Bluetooth SIG consists of companies in
+the areas of telecommunication, computing, networking, and consumer electronics
+(Wikipedia, 2009).
+2.4.5 Infrared
+Infrared (IR) radiation is electromagnetic radiation whose wavelength is
+longer than that of visible light (400 – 700 nm), but shorter than that of microwave
+radiation . It's wavelength spans between 750nm and 100 μm and is employed in
+short-range communication among devices that conform to the standards published
+by the Infrared Data Association (IrDA).
+Remote controls and IrDA devices use infrared light-emitting diodes
+(LEDs) to emit infrared radiation which is focused by a plastic lens into a narrow
+beam. The beam is modulated, i.e. switched on and off, to encode the data. The
+receiver uses a silicon photodiode to convert the infrared radiation to an electric
+current. It responds only to the rapidly pulsing signal created by the transmitter, and
+filters out slowly changing infrared radiation from ambient light. Infrared
+communications are useful for indoor use in areas of high population density. IR does
+not penetrate walls and so does not interfere with other devices in adjoining rooms.
+Infrared is the most common way for remote controls to command appliances.
+2.4.6 GSM
+GSM which stands for Global System for Mobile Communication, is the
+31
+most popular standard for mobile phone communication in the world. It is used by
+over three billion people across more than 212 countries and territories (Wikipedia,
+2009).
+GSM basically provides voice call and short message service (SMS). It
+operates as a cellular network that mobile phones connect to by trying to search for
+cells in their immediate vicinity. The modulation used in GSM is Gaussian minimumshift
+keying (GMSK), a kind of continuous-phase frequency shift keying. In GMSK,
+the signal to be modulated onto the carrier is first smoothed with a Gaussian low-pass
+filter prior to being fed to a frequency modulator, which greatly reduces the
+interference to neighbouring channels (adjacent channel interference). GSM networks
+operate in the 900 MHz or 1800MHz frequency bands in most countries of the world
+except in few countries like USA and Canada where 850 and 1900 MHz bands are
+used as the 900 and 1800 MHz bands were already allocated. The GSM technology
+uses a 200 Khz radio frequency channels that are time division multiplexed to enable
+up to eight users to access each carrier.
+2.4.7 Microcontroller
+A microcontroller is an inexpensive single-chip computer. Single-chip
+computer means that the entire computer system lies within the confines of the
+integrated circuit chip (Byte, 2002). The microcontroller on the encapsulated silver of
+silicon has features similar to those of our standard personal computer. Its ability to
+store and run unique programs makes it extremely versatile, and its ability to perform
+maths and logic functions allows it to mimic sophisticated logic and electronic
+circuits. Microcontrollers are used in automatically controlled products and devices,
+32
+such as automobile engine control systems, remote controls, office machines,
+appliances, power tools and toys. Hence, microcontrollers due not function in
+isolation, they accept input from one or more devices and provide output to other
+devices within a given system. In fact, they are responsible for the intelligence in most
+smart devices in the consumer market.
+The microcontroller has two general architecture types that define its mode
+of operation and design.
+2.3.7.1 Von-Neumann architecture
+This architecture has a single, common memory space where both program
+instructions and data are stored. There is a single data bus which fetches both
+instructions and data. And each time the CPU fetches a program instruction it may
+have to perform one or more read/write operations to data memory space. It must wait
+until these subsequent operations are complete before it can fetch and decode the next
+program instruction. The advantage to this architecture lies in its simplicity and
+economy. On some Von Neumann machines the program can read from and write to
+CPU registers, including the program counter. This can be dangerous as you can point
+the processor to memory blocks outside program memory space and careless
+processor manipulation can cause errors which require a hard reset.
+2.3.7.2 Harvard architecture
+This architecture implements separate memory areas for program
+instructions and data. There are two or more internal data buses which allow
+simultaneous access to both instructions and data. The CPU fetches instructions on
+33
+the program memory bus. If the fetched instruction requires an operation on data
+memory, the CPU can fetch the next program instruction while it uses the data bus for
+its data operation. This speeds up execution time at the cost of more hardware
+complexity. Most modern microcontrollers have the harvard architecture.
+34
+CHAPTER THREE
+METHODOLOGY
+In designing a home automation system, one or more suitable platforms are
+used in order to build a reliable and flexible system that can be easily operated and
+adapted for a new household appliance. Therefore, for the purpose of this project
+some specific deliberate choices were made on the type of platforms, hardware
+components and mode of operation of the home automation system.
+3.1 PRELIMINARY CONSIDERATIONS
+Before the actual design of the project work, specific deliberate choices in
+selection of appropriate implementation platforms and hardware components were
+made. Priority was given to low cost availability, reliability, flexibility and simplicity
+in all these selections.
+3.1.1 Selection of implementation platform
+As already explained in the previous chapter, there are many platforms
+over which a home automation system can be implemented. Of the currently available
+platforms – Powerline, RS232, Ethernet, Bluetooth, Infrared, GSM and
+Microcontroller; RS232, GSM and Microcontroller were found most appropriate due
+to their low cost availability, reliability and simplicity when used for an individual
+control home automation system which my project work is on. Powerline and
+Ethernet is too expensive and complex for this kind of home automation system,
+while Bluetooth and Infrared are unreliable.
+35
+3.1.2 Selection of hardware components
+Each platform has a set of hardware components over which it is
+implemented. For RS232, there are DB-9 and DB-25 connection cables, but DB-9
+cable was found most appropriate because it is cheaper, more readily available, less
+bulky and just sufficient for the designed system when compared with DB-25. For
+GSM, there are GSM modems and phone brands, but Nokia 6021 was chosen due to
+its low cost availability, ability to understand AT commands and availability of its
+RS232 DB-9 cable. Finally, for Microcontroller, the popular ones are those produced
+by Microchip, ATMEL, Motorola and Texas Instruments, of all these Microchip
+manufactured PIC microcontroller was found most suitable due to its low cost
+availability, and readily available programmers, compilers and flexibility.
+3.2 SYSTEM DESIGN
+The designed home automation system uses PIC18F4455 microcontroller,
+Nokia 6021 mobile phone, RS232 standard for communication between the
+microcontroller and mobile phone, HIN232 for interfacing the microcontroller, a relay
+and a driver for interfacing the relay.
+As illustrated in the block diagram shown in figure 3.1, when the Nokia
+6021 receives the required signal, it communicates via the RS232 and HIN232 to the
+PIC18F4455, the PIC18F4455 controls the relay state via a driver and this in turn
+determines the state of the connected appliance, whether switched on or off.
+36
+Figure 3.1 : Block diagram of the home automation system
+3.2.1 PIC18F4455
+PIC18F4455 is manufactured by Microchip Incorporation based in United
+States of America, and is one of their harvard architecture based microcontroller
+series called PIC. PIC is generally assumed to mean “programmable interface
+controller”. The PIC microcontroller contains a CPU (central processing unit), RAM
+(random access memory), ROM (read-only memory), I/O (input/output) lines, serial
+37
+HIN232
+PIC18F4455
+SERIAL
+RELAY
+DRIVER
+RS232
+HOME
+APPLIANCE
+AC LINE
+and parallel ports, timers and sometimes other built in peripherals such as A/D
+(analogue-to-digital) and D/A (digital-to-analogue) converters.
+Figure 3.2 shows the interactions (data flow) between the main
+microcontroller parts.
+Figure 3.2 : Interactions between the main microcontroller parts
+3.2.1.1 Central Processing Unit (CPU)
+The CPU is responsible for all the computing, it fetches, decodes and
+executes program instructions and directs the flow of data to and from memory. It
+performs the calculations required by program instructions and places the results of
+these calculations, if required, into memory space. Most CPUs are synchronous,
+meaning that they depend on the cycles of a processor clock, this clock generates a
+high-frequency square wave usually driven by a crystal, a RC (resistor capacitor) or
+an external source. The clock is sometimes referred to as an oscillator. The clock
+speed, or oscillation rate, is measured in megahertz (MHz) which represents one
+million cycles/second.
+38
+3.2.1.2 Random Access Memory (RAM)
+The RAM, random access memory, is used to write and read data values as
+a program runs. RAM is volatile meaning that if the power supply to the
+microcontroller is removed, its contents are lost. All variables used in a program are
+allocated from the RAM. The time to retrieve information from RAM does not
+depend upon the location of the information because RAM is not sequential, hence the
+term random access. Most small PIC microcontrollers provide very little RAM which
+forces you to write applications that use RAM wisely. Manipulating large data
+structures and using pointers, re-entrant or recursive functions use large amounts of
+RAM and are techniques which are generally avoided on microcontrollers
+3.2.1.3 Read Only Memory (ROM)
+The ROM, read only memory, is non-volatile memory used for program
+information and permanent data. The microcontroller uses ROM memory space to store
+program instructions it will execute when it is started or reset. Program instructions must be
+saved in non-volatile memory so that they are not affected by loss of power, the
+microcontroller usually cannot write data to program memory space.
+3.2.1.4 Input and Output ports (I/O)
+Without some means of getting information and signals in and out, the
+microcontroller will have little or no use. Hence, the input and output ports are used to
+pass data in and out of the microcontroller in a controlled manner, often according to
+a standard protocol. The PIC microcontroller ports are of two types namely, serial and
+parallel ports. They can operate in two main modes namely, synchronous and
+39
+asynchronous modes. The parallel I/O ports require a data line for each bit in a byte,
+while the serial I/O uses a single data line for all the bits in the data stream by
+transferring the bits in sequence. The synchronous mode involves synchronizing the
+data transfer with a clock while the asynchronous mode does not. PIC
+microcontrollers most often have parallel I/O capability built in and the serial I/O as a
+peripheral feature.
+3.2.2 PIC18F4455 architecture
+As shown in figure 3.3 is a typical PIC18F4455, a 40-pin high performance
+nano watt technology microcontroller, was used in the actual design (Microchip,
+2007).
+Figure 3.3 : 40-Pin PIC18F4455 microcontroller
+The features of PIC18F4455 are:
+40
+• 24576 Bytes flash program memory,
+• Capable of 12288 instruction set,
+• 2048 Bytes of Data memory,
+• 256 Bytes of Data EEPROM memory,
+• 18 interrupt sources,
+• USB V.20 compliant,
+• 100,000 erase/write cycle,
+• Programmable code protection,
+• Data retention of over 40 years,
+• Self-programmable under software control,
+• Enhanced USART module, and
+• C compiler optimized architecture.
+41
+Figure 3.4 : PIC18F4455 block diagram
+42
+3.2.3 PIC18F4455 programming
+Figure 3.4 is a detailed block diagram of the PIC4455. In programming it,
+a complier and a programmer were used. There are many available compilers for
+PIC18F4455 such as MikroC, Hi-Tech, MikroBasic, MikroPascal, CCS C and
+MPLAB, but CCS C (whose interface is shown in figure 3.5) was used. Also, there
+are many programmers available but MikroElectronika development board (it's
+control interface is shown in figure 3.6) was used.
+Figure 3.5 : CCS C compiler IDE interface
+The CCS C compiler has an Integrated Development Environment (IDE)
+through which programs written can be compiled into Hexadecimal codes. The IDE
+interface is shown above.
+43
+Figure 3.6 : MikroElectronika programmer interface
+3.2.4 Nokia 6021
+Nokia 6021, shown in figure 3.7, is an EDGE (Enhanced Data Rates for
+GSM Evolution) enabled mobile phone. It is built on the GSM technology standard
+and has both Infrared and Bluetooth transceivers, these features make it suitable for
+use in building an home automation system. It can serve as an extremely long range
+remote (one that can be controlled from anywhere in the world) via a combination of
+two or more of its Infrared or Bluetooth functionality, voice and data call capabilities,
+44
+short and multimedia message service (SMS/MMS) and wireless application protocol
+(WAP). It also has an RS232 data cable called DKU-5 cable with which the phone can
+be connected to any RS232 serial communication capable device.
+Figure 3.7 : Nokia 6021 mobile phone
+In remote communication with the Nokia 6021, Hayes command set (also
+known as AT command) is used. This command set is a specific command language
+consisting of series of short text strings which combine together to produce complete
+commands for operations such as dialling, hanging up, sending/reading text messages,
+and changing the parameters of the connection.
+3.2.5 HIN232
+HIN232, shown in figure 3.8, is an RS232 transmitter/receiver interface
+chip, used for making serial communication possible between a device that uses TTL
+(transistor-transistor logic) signal levels and another device that uses RS232 signal
+levels (Intersil, 2008).
+45
+Figure 3.8 : HIN232 pinout
+It requires a single +5V power supply and feature onboard charge pump
+voltage converters which generate +10V and -10V supplies from the 5V supply. Its
+drivers feature true TTL input compatibility, slew-rate limited output, and 300Ω
+power-off source impedance. The receivers can handle up to +30V, and have a 3kΩ to
+7kΩ input impedance, and they feature hysteresis to greatly improve noise rejection.
+Table 3.1 : HIN232 pin descriptions
+Table 3.1 gives a detailed working description of each pin.
+46
+3.2.6 Relay
+Relay is a small electrical switch consisting of an electromagnet (coil), a
+switch and a spring, that opens and closes under the control of another electrical
+circuit. The spring holds the switch in one position, until a current is passed through
+the coil, the coil generates a magnetic field which moves the switch. Because the relay
+is able to control an output circuit of higher power than the input circuit, it is often
+used to automatically switch large electrical power devices (Wikipedia, 2009).
+There are many types of relay, namely;
+• Latching relay – This relay has two relaxed states (bistable) and it is
+often referred to as 'impulse', 'keep' or 'stay' relay. When the current is
+switched off, the relay remains in its last state. This is possible due to a
+solenoid operating a ratchet and cam mechanism, or by having two
+opposing coils with an over-center spring or permanent magnet to hold the
+armature and contacts in position while the coil is relaxed. Hence, the first
+pulse of current to the coil turns the relay on and the second pulse turns it
+off.
+• Reed relay – This relay has a set of contacts inside a vacuum or inert
+gas-filled glass tube, which protects the contacts against atmospheric
+corrosion. The contacts are closed by a magnetic field generated when
+current passes through a coil around the glass tube. Reed relays are capable
+of faster switching speeds than most other relay types, but have a low
+switch current and voltage ratings.
+47
+• Contactor relay – This is a very heavy-duty relay used for switching
+electric motors and lighting loads. High current contacts are made with
+alloys containing silver. Though there is an unavoidable arcing and the
+contacts oxidize, the silver oxide formed is still a good conductor.
+Contactor relays are often used for motor starters and they generate a lot of
+noise when switching.
+• Solid-state relay – This relay type is a solid state electronic
+component that provides the same function as the electromagnetic relay. It
+is just that it does not have any moving part which increases its long-term
+reliability.
+48
+CHAPTER FOUR
+DESIGN AND IMPLEMENTATION
+The design of this project involved coupling several hardware components
+and testing at the different stages of the implementation.
+Firstly, a flow chart as shown in figure 4.1 was developed for the design
+indicating the processes involved.
+Figure 4.1 : Flow chart of the design
+49
+Phone rings
+Switch appliance
+off
+Start
+Switch appliance
+on
+Appliance already
+switched on
+Send message
+Send message
+No Yes
+Yes
+4.1 BUILDING THE POWER SUPPLY AND INTERFACING THE RELAY
+In building the power supply, as illustrated in figure 4.2 the following
+components were used;
+• 220/9V 500mA 50Hz transformer,
+• 4700μF, 35V capacitor,
+• bridge rectifier, and
+• 5V voltage regulator.
+Figure 4.2 : The power supply
+50
+Voltage regulator
+Capacitor
+Transformer
+Bridge rectifier
+The primary side of the transformer was connected to a 220V AC mains
+while the 9V secondary side was connected to the alternating voltage input pins of the
+bridge rectifier. The DC output of the bridge rectifier was sent to the 5V voltage
+regulator which supplies the constant 5V voltage supply needed by the PIC4455 and
+HIN232.
+4.2 SERIAL COMMUNICATION BETWEEN THE MICROCONTROLLER
+AND NOKIA 6021
+In making possible the serial communication between the PIC4455
+microcontroller and the Nokia 6021 mobile phone, the voltage level signals from the
+RS232 DB-9 data cable of the phone had to be converted to the corresponding
+TTL/CMOS voltage level signals that the microcontroller understands. In doing this,
+HIN232 which is an RS232 line driver/receiver was used to convert the RS232 signals
+to their corresponding TTL/CMOS signals. The microcontroller transmit pin C6 and
+receive pin C7 were connected to the TTL/CMOS input and output pins 9 and 10, in
+doing this connection it was necessary to connect the transmit pin (C6) of the
+microcontroller to the input receive pin of the HIN232 and the receive pin (C7) of the
+microcontroller to the output transmit pin of the HIN232. This ensured the cross
+connection required for serial communication between two DCEs (Data
+Communication Equipment) for both the microcontroller and the Nokia 6021 are
+DCEs. For the DB-9 cable, the transmit pin 2 is connected to the RS232 output pin 7
+and the receive pin 3 is connected to the RS232 input pin 8.
+Finally, the DTR (data terminal ready) pin 4 and RTS (request to send) pin
+7 of the DB-9 cable were connected to the +5V terminal while the signal ground pin 5
+51
+was connected to the ground terminal. The complete connection is shown in figure
+4.3.
+Figure 4.3 : The RS232 to microcontroller portion of the design
+4.3 PROGRAMMING THE MICROCONTROLLER
+In programming the microcontroller, CCS C compiler was used to write the
+PIC C code that was built into an hexadecimal code to be programmed into the
+PIC4455.
+The PIC C program code implemented for the PIC4455 microcontroller
+was developed stepwise as –
+• Include the required header files which are 18f4455.h and string.h
+header files.
+• Include the required class file which is input.c.
+52
+HIN232
+PIC4455
+microcontroller
+RS232 DB-9
+connector
+• Set the communication parameters like the clock rate (20 MHz), the
+baud rate (9600 bits/s), the transmit pin (PIN C6) and the receive pin
+(PIN C7).
+#use rs232(baud=9600, xmit=PIN_C6, rcv=PIN_C7)
+• Initialize the PIC4455 ports to be used. Pin C7 was set as an input pin
+since it was the receive pin, the port D was initialized to low since D4
+pin would be used to control the relay.
+• Send the AT commands that will put the phone in text mode
+(at+cmgf=1) and notification mode (at+cnmi=2,3,2,2,1). This was
+required for the phone to notify the microcontroller of an incoming call.
+printf(“at+cmgf=1;+cnmi=2,3,2,2,1\r”);
+• Put the microcontroller in a waiting mode such that if it detects data on
+its receive pin, it will execute the main functional codes that will
+compare the incoming data with some predetermined data to determine
+if the phone is ringing and the course of action to take before going
+back to the waiting mode.
+if(kbhit())
+{
+...
+}
+4.4 TESTING THE COMPLETE DESIGN AND CASING
+53
+After the completion of the hardware coupling, several tests were done on
+the design. Some observations and corrections were made as follows:
+1. The system would not work when the phone is connected after
+powering it, even after a reset. This was due to the fact that the signals
+sent at first by the system to the phone do not die of the line immediately
+and affects subsequent signals sent even after connecting and resetting the
+system. This can be prevented by connecting the phone first before
+powering the system. Much concern was not given to this shortcoming
+because the system was designed to have a permanently connected phone,
+making it impossible for this shortcoming to arise.
+2. It was also observed that the system would not respond after about
+four loop cycles (this corresponds to four concurrent switch toggle). This
+was due to buffer overflow on the microcontroller which makes it not
+process new data sent it by the phone after those cycles. The attempted
+solution was to find a way of flushing the buffer after each cycle, but due
+to little help found from books, internet and fellow PIC programmers, it's
+solution could not be implemented.
+Other than in the above stated situations, the system worked very well and
+reliably.
+In designing the case for the system, utmost concern was given to guarding
+the system from physical strain and stress during carriage and project presentation. A
+transparent plastic material was used for the casing as against glass material which
+54
+may easily break, a paper material which may give in to strain and stress, or even a
+metallic material which will make the project work quite uneconomical, clumsy and
+heavy. The casing was made in a manner that permits the whole circuit board to be
+detached from the system.
+The complete home automation system circuit controlling a lighting
+fixture, and the designed system are shown in figure 4.4 and 4.5.
+Figure 4.4: The complete home automation system circuit (controlling
+lighting fixture)
+55
+Figure 4.5: The individual control home automation system
+56
+CHAPTER FIVE
+CONCLUSION AND RECOMMENDATION
+5.1 CONCLUSION
+It is evident from this project work that an individual control home
+automation system can be cheaply made from low-cost locally available components
+and can be used to control multifarious home appliances ranging from the security
+lamps, the television to the air conditioning system and even the entire house lighting
+system. And better still, the components required are so small and few that they can
+be packaged into a small inconspicuous container.
+The designed home automation system was tested a number of times and
+certified to control different home appliances used in the lighting system, air
+conditioning system, heating system, home entertainment system and many more
+(this is as long as the maximum power and current rating of the appliance does not
+exceed that of the used relay).
+Finally, this home automation system can be also implemented over
+Bluetooth, Infrared and WAP connectivity without much change to the design and yet
+still be able to control a variety of home appliances. Hence, this system is scalable
+and flexible.
+5.2 RECOMMENDATION
+In consonance with the project work and in view of the researched methods
+and undertakings in the project design, the following are recommended:
+57
+• The department should help the students in getting components that
+are not locally available.
+• Students should be taught how to make embedded systems as the use
+of computer software in most project work makes it uneconomical, and
+the use of the conventional integrated circuits and logic gates makes the
+project work clumsy.
+• Finally, this project can be further developed to control more than
+one home appliance at once through the use of short message service texts
+rather than voice dial though it will be more expensive and will require
+more relay circuits, making it a distributed control home automation
+system. Also, to cut the cost of mobile phone, the project may be
+implemented using standalone GSM modems that only perform
+specialised functions like text messaging and/or phone calls. This GSM
+modems often are cheaper and more reliable than GSM mobile phones.
+58
+REFERENCES
+Byte Craft (2002). First Steps with Embedded Systems. Byte Craft Limited, Canada.
+B & B Electronics (2003) RS-232 connections that work! DTE & DCE FAQ. From
+http://www.bb-elec.com Retrieved on 29/03/2003
+Collins, T. J. (2008). A project report on the design and construction of a low voltage
+power line communication system. Project Report, FUTA Akure.
+Intersil (2008). HIN232 datasheet. Intersil Inc, USA.
+Martin Bates (2006). Interfacing PIC Microcontrollers Embedded Design by
+Interactive Simulation. Newnes, London.
+Microchip (2007). PIC 18F2455/2550/4455/4550 Data Sheet. Microchip Technology.
+Inc, USA
+Nigel Gardner (1998). An Introduction to programming the Microchip PIC in C.
+Character Press, UK.
+Wikipedia (2009). Automation. From http://en.wikipedia.org/wiki/Automation.
+Retrieved on 7/30/2009
+Wikipedia (2009). Bluetooth. From http://en.wikipedia.org/wiki/Bluetooth. Retrieved
+on 7/30/2009
+Wikipedia (2009). Building Automation. From
+http://en.wikipedia.org/wiki/Building_automation. Retrieved on 7/30/2009
+Wikipedia (2009). Ethernet. From http://en.wikipedia.org/wiki/Ethernet. Retrieved on
+8/3/2009
+Wikipedia (2009). European Home Systems Protocol. From
+http://en.wikipedia.org/wiki/European_Home_Systems_Protocol. Retrieved
+on 8/3/2009
+Wikipedia (2009). GSM. From http://en.wikipedia.org/wiki/GSM. Retrieved on
+8/7/2009
+Wikipedia (2009). Home Automation. From
+http://en.wikipedia.org/wiki/Home_automation. Retrieved on 7/6/2009
+Wikipedia (2009). INSTEON. From http://en.wikipedia.org/wiki/INSTEON. Retrieved
+on 8/3/2009
+59
+Wikipedia (2009). KNX (standard). From
+http://en.wikipedia.org/wiki/KNX_(standard). Retrieved on 8/3/2009
+Wikipedia (2009). LonWorks. From http://en.wikipedia.org/wiki/LonWorks. Retrieved
+on 8/3/2009
+Wikipedia (2009). Microcontroller. From
+http://en.wikipedia.org/wiki/Microcontroller. Retrieved on 8/3/2009
+Wikipedia (2009). ONE.NET. From http://en.wikipedia.org/wiki/ONE.NET. Retrieved
+on 8/3/2009
+Wikipedia (2009). RS232. From http://en.wikipedia.org/wiki/RS232. Retrieved on
+7/21/2009
+Wikipedia (2009). X10 (Industry Standard). From
+http://en.wikipedia.org/wiki/X10_(industry standard). Retrieved on 8/3/2009
+Wikipedia (2009). ZigBee. From http://en.wikipedia.org/wiki/ZigBee. Retrieved on
+8/3/2009
+Wikipedia (2009). Z-Wave. From http://en.wikipedia.org/wiki/Z-Wave. Retrieved on
+8/3/2009
+60
+APPENDIX I: Bill of components
+ITEM SYMBOL VALUE COST (N)
+1 B1 Bridge Rectifier 50
+2 C1 1.0 μF 10
+3 C2 1.0 μF 10
+4 C3 1.0 μF 10
+5 C4 1.0 μF 10
+6 C5 1.0 μF 10
+7 C6 4700 μF 10
+8 C7 22 pF 10
+9 C8 22 pF 10
+10 D1 DB-9 RS232 Cable 800
+11 F1 Board 100
+12 F2 Board 100
+13 H1 HIN232 70
+14 L1 LED 5
+15 NI NOKIA 6021 6500
+16 P1 PIC4455 2000
+17 R1 10 kΩ 5
+18 R2 330 Ω 5
+19 R3 200 Ω 5
+20 S1 6V 10A Relay 50
+21 T1 Transformer 300
+22 U1 TIP41C 50
+23 U2 TIP41C 50
+24 V1 LM7805 50
+25 V2 LM7806 50
+26 X1 Crystal Oscillator 70
+27 Z1 Reset Button 20
+TOTAL 10360
+61
+APPENDIX II: The PIC C code for programming the PIC4455 in CCS C
+compiler
+#include <18f4455.h>
+#use delay(clock=12000000)
+#use rs232(baud=9600, xmit=PIN_C6,rcv=PIN_C7)
+#fuses HS,NOWRT,NOWDT,NOPUT,NOPROTECT,NOBROWNOUT,NOLVP,NOCPD,NODEBUG
+#use fast_io(A)// enhances self i/o settings
+#use fast_io(B)
+#use fast_io(C)
+#include <string.h>// header file
+#include <input.c>
+int i,u,a,b,counter=1,toggle;
+char data[20],data1[20],data2[20],data3[20],test[12],mem[12],req[12];
+void main()
+{
+set_tris_c(128);
+set_tris_b(0);
+output_b(255);
+set_tris_d(0);
+output_d(0);
+delay_ms(500);
+printf("at+cmgf=1;+cnmi=2,3,2,2,1\r"); /* This puts the phone in text
+mode and enables notification sending */
+i=getch(); // \
+u=getch(); // \
+gets(data); // \
+// |-Extract and silent the initial sent instruction
+i=getch(); // /
+u=getch(); // /
+gets(data1);// /
+back:
+if(kbhit()) //Run the subsequent codes when there is a new data
+{
+welcome:
+if(counter==200) // \_ Re-initialise the counter
+counter=0; // /
+gets(data2);
+62
+gets(data3);
+b=0;
+for(a=1;a<=6;a++)
+{
+req[b]=data3[a];
+b++;
+}
+strncpy(mem,req,4);
+strcpy(test,"RING"); /* The control string which the phone sends when
+there is a phone call */
+if(strncmp(mem,test,4)==0) //check if the notification is for phone
+ringing
+{
+counter++; //Increment the counter
+toggle=counter%10;
+if(toggle==5)
+{
+output_high(PIN_D4); //put 5V on the D4 pin
+printf("at+cmgs=\"08064702218\"\r");
+printf("appliance is switched on");
+putc(26);
+}
+if(toggle==0)
+{
+output_low(PIN_D4); //set pin D4 to 0V
+//delay_ms(5);
+printf("at+cmgs=\"08064702218\"\r");
+//delay_ms(50);
+printf("appliance is switched off");
+putc(26);
+//delay_ms(10);
+}
+}
+goto welcome;
+}
+goto back;
+}
+63
